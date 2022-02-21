@@ -15,6 +15,10 @@ class FlaskAppTests(unittest.TestCase):
     def test_addusers_status_code(self):
         result = self.app.post(
             '/api/v1/users',
+            data='{"username":"dumb", "email":"dumb@abc.abc", "password":"test123", "name":"dumb"}',
+            content_type='application/json')
+        result = self.app.post(
+            '/api/v1/users',
             data='{"username":"jonathan%s", "email":"%s@abc.abc", "password":"test123", "name":"jon"}' % (random.randint(0,100),random.randint(0,100)),
             content_type='application/json')
         print(result)
@@ -27,3 +31,11 @@ class FlaskAppTests(unittest.TestCase):
             content_type='application/json'
         )
         self.assertEqual(result.status_code,200)
+
+    def test_delusers_status_code(self):
+        result = self.app.delete(
+            '/api/v1/users',
+            data='{"username":"dumb"}',
+            content_type='application/json'
+        )
+        self.assertEqual(result.status_code, 200)

@@ -25,9 +25,6 @@ def home_index():
         api_list.append(a_dict)
 
     conn.close()
-    # print(api_list)
-    # res = (jsonify({'api_version':api_list}), 200)
-    # print(res)
     return jsonify({'api_version':api_list}), 200
 
 @app.route('/api/v1/users', methods=['GET'])
@@ -65,9 +62,12 @@ def update_user(user_id):
     return jsonify({'status': v1.upd_user(user)}), 200
 
 
-
-
-
+@app.route('/api/v1/users', methods=['DELETE'])
+def delete_user():
+    if not request.json or not 'username' in request.json:
+        abort(400)
+    user = request.json['username']
+    return jsonify({'status': v1.del_user(user)}), 200
 
 
 @app.errorhandler(404)

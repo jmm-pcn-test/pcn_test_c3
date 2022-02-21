@@ -63,7 +63,7 @@ def add_user(new_user):
     cur.execute("SELECT * from users where username=? OR emailid=?", (new_user['username'], new_user['email']))
     data = cur.fetchall()
     if len(data) != 0:
-        abort(409)
+        flask.abort(409)
     else:
         cur.execute(
             "INSERT INTO users (username, emailid, password, full_name) values (?,?,?,?);",
@@ -72,4 +72,21 @@ def add_user(new_user):
         conn.commit()
         return "Success"
     conn.close()
-    return jsonify(new_user)
+    return flask.jsonify(new_user)
+
+
+def del_user(user):
+    conn = sqlite3.connect('ch3.db')
+    print("Open database successfully.")
+    cur = conn.cursor()
+    cur.execute("SELECT * from users where username=?;",(user,))
+    data = cur.fetchall()
+    print("Data", data)
+    if len(data) == 0:
+        flask.abort(404)
+    else:
+        cur.execute("DELETE from users where username==?",(user,))
+        conn.commit()
+    return "Success."
+
+    return "Success"
