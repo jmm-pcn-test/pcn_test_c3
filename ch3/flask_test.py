@@ -39,3 +39,14 @@ class FlaskAppTests(unittest.TestCase):
             content_type='application/json'
         )
         self.assertEqual(result.status_code, 200)
+
+    def test_addtweet_status_code(self):
+        result = self.app.post('/api/v2/tweets',
+                               data='{"username":"a", "body":"Something %s"}'%(random.randint(0,10000)),
+                               content_type='application/json')
+        self.assertEqual(result.status_code, 201)
+
+    def test_get_tweets(self):
+        result = self.app.get('/api/v2/tweets')
+        self.assertEqual(result.status_code, 200)
+

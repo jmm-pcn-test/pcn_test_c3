@@ -1,3 +1,5 @@
+from time import strftime, gmtime
+
 from flask import Flask, jsonify, make_response, abort, request
 import json
 import sqlite3
@@ -69,6 +71,25 @@ def delete_user():
     user = request.json['username']
     return jsonify({'status': v1.del_user(user)}), 200
 
+@app.route('/api/v2/tweets',methods=['GET'])
+def  get_tweets():
+    return v2.list_tweets(), 200
+
+@app.route('/api/v2/tweets/<int:id>',methods=['GET'])
+def  get_tweet(id):
+    return v2.list_tweet(id), 200
+
+@app.route('/api/v2/tweets', methods=['POST'])
+def tweet_route():
+    req = request.json
+    if not req or not 'username' in req or not 'body' in req:
+        abort(400)
+    tweet = {
+        'username':req['username'],
+        'body':req['body'],
+        'created_at': strftime("%Y-%m-%dT%H:%H:%SZ", gmtime())
+    }
+    return jsonify({"status": v2.add_tweet(tweet)}), 201
 
 @app.errorhandler(404)
 def resource_not_found(error):
