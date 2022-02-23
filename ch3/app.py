@@ -1,6 +1,6 @@
 from time import strftime, gmtime
 
-from flask import Flask, jsonify, make_response, abort, request
+from flask import Flask, jsonify, make_response, abort, request, render_template
 import json
 import sqlite3
 
@@ -9,6 +9,16 @@ import v2
 
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
+
+
+@app.route("/adduser")
+def adduser():
+    return render_template("adduser.html")
+
+@app.route('/addtweets')
+def adduser():
+    return render_template("addtweets.html")
+
 
 @app.route("/api/v1/info")
 def home_index():
