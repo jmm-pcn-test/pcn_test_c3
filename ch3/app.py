@@ -1,6 +1,7 @@
 from time import strftime, gmtime
 
-from flask import Flask, jsonify, make_response, abort, request, render_template
+from flask import Flask, jsonify, make_response, abort, request, render_template, redirect, url_for, session
+from flask_cors import CORS, cross_origin
 import json
 import sqlite3
 
@@ -10,13 +11,40 @@ import v2
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
+CORS(app)
+# cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+@app.route('/')
+def main():
+    return render_template('main.html')
+
+@app.route('/addname')
+def addname():
+    if request.args.get('yourname'):
+        session['name'] = request.args.get('yourname')
+        return redirect(url_for('main'))
+    else:
+        return render_template('addname.html', session=session)
+
+@app.route('/clear')
+def clearsession():
+    session.clear()
+    return redirect(url_for('main'))
+
+@app.route('/set_cookie')
+def cookie_insertion():
+    redirect_to_main = redirect('/')
+    response = app.make_response(redirect_to_main)
+    response.set_cookie('cookie_name',value='values')
+
+    return response
 
 @app.route("/adduser")
 def adduser():
     return render_template("adduser.html")
 
 @app.route('/addtweets')
-def adduser():
+def addtweet():
     return render_template("addtweets.html")
 
 

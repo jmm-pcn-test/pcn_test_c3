@@ -20,6 +20,13 @@ function UserListViewModel() {
         self.email("")
         self.password("")
     };
+    $.getJSON('/api/v1/users', function(userModels) {
+    var t = $.map(userModel.user_list, function(item) {
+        return new User(item);
+    });
+    self.user_list(t);
+});
+
     self.save = function () {
         return S.ajax({
             url:'/api/v1/users',
@@ -52,9 +59,3 @@ function UserListViewModel() {
 }
 
 ko.applyBindings(new UserListViewModel())
-$.getJSON('/api/v1/users', function(userModels) {
-    var t = $.map(userModel.user_list, function(item) {
-        return new User(item);
-    });
-    self.user_list(t);
-});
